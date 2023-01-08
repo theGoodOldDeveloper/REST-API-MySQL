@@ -30,15 +30,12 @@ const postsController = {
     create: async (req, res) => {
         try {
             const { title, content } = req.body
-
-            console.log(title)
-            console.log(content)
-
             const sql = "insert into posts (title, content) values (?, ?)"
             const [rows, fields] = await pool.query(sql, [title, content])
             //res.json({ data: rows })
             //res.json(rows)
             res.redirect('/')
+            //res.end
         } catch (error) {
             console.log(error)
             res.json({
@@ -48,12 +45,15 @@ const postsController = {
     },
     update: async (req, res) => {
         try {
-            const { title, content } = req.body
+            /* const { title, content } = req.body */
             const { id } = req.params
+            const title = req.body.title
+            const content = req.body.content
             const sql = " update posts set title = ?, content = ? where id = ?"
             const [rows, fields] = await pool.query(sql, [title, content, id])
             //res.json({ data: rows })
             res.json(rows)
+            //res.redirect('/')
         } catch (error) {
             console.log(error)
             res.json({

@@ -1,5 +1,7 @@
+/* var valasz = prompt('Na mizujs?')
+console.log(valasz)
+alert(valasz) */
 getData()
-
 
 //INFO:TODO:INFO:
 async function getData() {
@@ -69,9 +71,63 @@ function renderPosts(posts) {
             window.location = '/'
         }
     }
+    $('.editPost').on('click', function () {
+        console.log('id', this.id)
+        let title = ''
+        let content = ''
+        for (let post of posts) {
+            if (post.id == this.id) {
+                title = post.title
+                content = post.content
+            }
+        }
+        $("#editModal").modal('show')
+        //document.getElementById('editHeadModal').innerHTML = `Editing Id: ${this.id}`
+        $("#editHeadModal").html(`Editing Id: ${this.id}`)
+        //document.getElementById('editTitle').value = title
+        //document.getElementById('editContent').value = content
+        $("#editTitle").val(title)
+        $("#editContent").val(content)
+
+
+        $("#sendEditData").on('click', () => {
+            console.log('klikkkelteeeemmmmm')
+            editPostData(this.id)
+        })
+
+        async function editPostData(id) {
+            //title = document.getElementById('editTitle').value
+            //content = document.getElementById('editContent').value
+            title = $("#editTitle").val()
+            content = $("#editContent").val()
+            console.log(id, title, content, '**********************')
+
+            var response = await fetch(`/posts/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({ id: id, title: title, content: content }),
+            })
+            updateRespone = await response.json()
+            console.log('updateRespone -affectedRows-------------- ', updateRespone.affectedRows)
+            if (updateRespone.affectedRows == 1) {
+                console.log('SIKER 😛😛😛😛😛😛')
+                window.location = '/'
+            }
+
+        }
+    })
 }
 
 
 /* <dl><dt>${post.id} ${post.title}</dt></dl> */
 /*             <button class='btn bg-success text-white p-1 mt-1 updateItem' id=${post.id}><i class="bi bi-pencil-square"></i> UPDATE </i></button>
          */
+
+/* 
+"Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+*/
+/* 
+var response = await fetch(`/posts/${id}?title=5555555555&content=OK+99999999999`
+*/
